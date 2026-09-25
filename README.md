@@ -39,24 +39,19 @@ index=_audit action=login info=failed
 
 ---
 
-## 📊 Lab Results & Artifacts
+## 📊 Lab Results & Data Artifacts
 
-### Splunk Search Results
-The SPL threat hunting query successfully aggregated the simulated traffic, isolating both target threat vectors into an actionable security intelligence view:
+### Log Ingestion & Analytics Output
+The SPL threat hunting query successfully aggregated the simulated telemetry. Without requiring visual dashboard overhead, the raw data structure maps directly into the following analytical security view:
 
-| User | Client IP | Count |
-| :--- | :--- | :--- |
-| `hacker_bob` | `127.0.0.1` | 5 |
-| `malicious_user` | `127.0.0.1` | 5 |
-
-### Console Evidence
-Below is the live execution output captured directly from the Splunk Enterprise analytical sandbox dashboard:
-
-![Splunk Search Results Dashboard](splunk_results.png)
+| Target User | Source Client IP | Total Failed Attempts | Risk Status |
+| :--- | :--- | :--- | :--- |
+| `hacker_bob` | `127.0.0.1` | 5 | Anomalous Activity Detected |
+| `malicious_user` | `127.0.0.1` | 5 | Anomalous Activity Detected |
 
 ---
 
-## 🎯 Incident Response & Key Takeaways
+## 🎯 Incident Response & Production Recommendations
 The implemented pipeline successfully identified and isolated the anomalous authentication spikes. 
 
-**Production Recommendations:** In a live enterprise infrastructure, this logic would be operationalized by establishing a **volume threshold alert** (e.g., `where count > 5` within a 5-minute window). This threshold would trigger a high-priority alert to downstream SOAR playbooks or network firewalls to instantly isolate and block the offending source network address (`clientip`).
+In a live enterprise infrastructure, this logic would be operationalized by establishing a **volume threshold alert** (e.g., adding `| where count > 5` within a 5-minute moving window). This threshold trigger would be mapped to a downstream SOAR playbook or a perimeter firewall API to instantly isolate and block the offending source network address (`clientip`).
